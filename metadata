@@ -1,0 +1,2 @@
+transcription_ model --> whisper-large-v3-turbo (of groq)
+llm_model --> claude-sonnet-4-6 (anthropic)

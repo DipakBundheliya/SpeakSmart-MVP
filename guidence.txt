@@ -1,0 +1,17 @@
+## MIC Flow
+
+Question speaks (TTS)
+  ↓
+Model loads (1-2s first time, instant after)
+  ↓ "Listening…" (pulsing mic)
+You start speaking (≥ 384ms of voice)
+  ↓ Turns red, timer starts
+You stop speaking
+  ↓ ~1.15s of silence counted
+Auto-stops → encodes WAV → sends to Groq
+
+VAD ONNX Model information:
+silero_vad_legacy.onnx
+Made by the Silero team (Russian ML company)
+Very lightweight — ~1.8MB, runs in <1ms per audio frame
+Trained on 100+ languages including English

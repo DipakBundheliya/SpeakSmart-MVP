@@ -1,0 +1,92 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 240 20% 98%;
+    --foreground: 250 25% 15%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 250 25% 15%;
+
+    --primary: 263 70% 58%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 330 80% 60%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 240 10% 94%;
+    --muted-foreground: 240 10% 45%;
+
+    --accent: 270 60% 96%;
+    --accent-foreground: 263 70% 50%;
+
+    --destructive: 0 72% 55%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 240 10% 90%;
+    --input: 240 10% 90%;
+    --ring: 263 70% 58%;
+
+    --radius: 1rem;
+  }
+
+  .dark {
+    --background: 240 15% 8%;
+    --foreground: 240 10% 92%;
+
+    --card: 240 12% 12%;
+    --card-foreground: 240 10% 92%;
+
+    --primary: 263 70% 62%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 330 70% 55%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 240 10% 18%;
+    --muted-foreground: 240 8% 55%;
+
+    --accent: 263 40% 18%;
+    --accent-foreground: 263 60% 75%;
+
+    --destructive: 0 72% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 240 10% 20%;
+    --input: 240 10% 20%;
+    --ring: 263 70% 62%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
+  }
+}
+
+@layer utilities {
+  .gradient-primary {
+    @apply bg-gradient-to-r from-primary to-secondary;
+  }
+  .gradient-text {
+    background: linear-gradient(to right, hsl(263 70% 58%), hsl(330 80% 60%));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+}
+
+@keyframes pulse-ring {
+  0%   { transform: scale(1);   opacity: 0.6; }
+  100% { transform: scale(1.8); opacity: 0;   }
+}
+
+.animate-pulse-ring {
+  animation: pulse-ring 1.2s ease-out infinite;
+}
