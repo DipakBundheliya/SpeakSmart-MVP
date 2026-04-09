@@ -74,7 +74,8 @@ export default function Recorder({ onAudioReady, autoStart }) {
         minSpeechFrames: 4,
         redemptionFrames: 12,
         onSpeechStart: () => {
-          flog('VAD: speech started')
+          window.speechSynthesis?.cancel()   // barge-in: stop question if still speaking
+          flog('VAD: speech started (TTS cancelled if it was active)')
           setVadState('speaking')
           setSeconds(0)
           timerRef.current = setInterval(() => setSeconds(s => s + 1), 1000)

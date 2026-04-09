@@ -49,18 +49,20 @@ export default function App() {
   const [dashboard, setDashboard] = useState(null)
   const [isSpeaking, setIsSpeaking] = useState(false)
   const [questionReady, setQuestionReady] = useState(false)
+  const [recorderError, setRecorderError] = useState('')
   const lastSpokenQ = useRef(-1)
 
   // ── Speak question when it becomes active (once per question) ──────────────
   useEffect(() => {
     if (mode && status === 'idle' && lastSpokenQ.current !== currentQ) {
       lastSpokenQ.current = currentQ
-      setQuestionReady(false)
+      setQuestionReady(true)   // start VAD loading immediately, parallel with TTS
+      setRecorderError('')
       flog(`TTS: speaking Q${currentQ + 1}`)
       speakText(
         QUESTIONS[currentQ],
         () => { setIsSpeaking(true); flog('TTS: started') },
-        () => { setIsSpeaking(false); setQuestionReady(true); flog('TTS: done — questionReady=true, VAD will start') },
+        () => { setIsSpeaking(false); flog('TTS: finished') },
       )
     }
   }, [currentQ, mode, status])
@@ -105,6 +107,8 @@ export default function App() {
       if (mode === 'practice') setTranscript(finalTranscript)
     } catch (err) {
       console.error('Transcription error:', err)
+      setRecorderError('Transcription failed — Groq API error. Speak again.')
+      setQuestionReady(false)
       setStatus('idle')
       return
     }
@@ -142,6 +146,8 @@ export default function App() {
       setStatus('feedback')
     } catch (err) {
       console.error('Feedback error:', err)
+      setRecorderError('AI feedback failed. Speak again.')
+      setQuestionReady(false)
       setStatus('idle')
     }
   }
@@ -284,6 +290,17 @@ export default function App() {
         {/* Recorder */}
         {status === 'idle' && (
           <div className="flex flex-col items-center gap-2">
+            {recorderError && (
+              <div className="w-full bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 rounded-xl px-4 py-3 flex items-center justify-between gap-3">
+                <p className="text-red-600 dark:text-red-400 text-sm">{recorderError}</p>
+                <button
+                  onClick={() => { setRecorderError(''); setQuestionReady(true) }}
+                  className="text-xs font-semibold text-red-600 dark:text-red-400 border border-red-300 dark:border-red-700 rounded-lg px-3 py-1 hover:bg-red-100 dark:hover:bg-red-900/40 cursor-pointer shrink-0"
+                >
+                  Speak Again
+                </button>
+              </div>
+            )}
             <Recorder onAudioReady={handleAudioReady} autoStart={questionReady} />
             {mode === 'practice' && (
               <button
